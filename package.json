@@ -20,5 +20,11 @@
   "bugs": {
     "url": "https://github.com/Shaun2D2/gemini/issues"
   },
-  "homepage": "https://github.com/Shaun2D2/gemini#readme"
+  "homepage": "https://github.com/Shaun2D2/gemini#readme",
+  "devDependencies": {
+    "babel-cli": "^6.26.0"
+  },
+  "dependencies": {
+    "yargs": "^11.0.0"
+  }
 }
