@@ -1,0 +1,24 @@
+{
+  "name": "gemini",
+  "version": "1.0.0",
+  "description": "mongoose database seeder",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Shaun2D2/gemini.git"
+  },
+  "keywords": [
+    "mongo",
+    "mongoose",
+    "seeder"
+  ],
+  "author": "Shaun Lobsinger",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Shaun2D2/gemini/issues"
+  },
+  "homepage": "https://github.com/Shaun2D2/gemini#readme"
+}
