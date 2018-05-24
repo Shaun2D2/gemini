@@ -1,5 +1,7 @@
 const { exec } = require('child_process');
+const path = require('path');
 const fs = require('fs');
+
 
 require('yargs')
 .command(
@@ -20,9 +22,9 @@ require('yargs')
 
       fs.writeFileSync('./database/seeder/sample.js',
       `
-          import fs from 'fs';
+      import fs from 'fs';
 
-          console.log('hello world this is babel-node saying yo g');
+      console.log('hello world this is babel-node saying yo g');
       `);
 
       console.log('complete...');
@@ -32,9 +34,7 @@ require('yargs')
   'seed',
   'seed some fancy data',
   () => {
-      const comm = exec(`babel-node ./database/seeder/index.js`);
-
-      comm.stdout.on('data', (data) => console.log(data));
+      const stuff = require('./database/seeder/sample.js');
   }
 )
 .argv
