@@ -30,6 +30,8 @@
     "babel-register": "^6.26.0"
   },
   "dependencies": {
+    "babel-polyfill": "^6.26.0",
+    "mongoose": "^5.1.2",
     "yargs": "^11.0.0"
   }
 }

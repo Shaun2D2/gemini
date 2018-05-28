@@ -1,7 +1,18 @@
-const { exec } = require('child_process');
+const mongoose = require('mongoose');
 const path = require('path');
 const fs = require('fs');
 
+/**
+ * load in the code templates
+ *
+ */
+const rcTemplate = require('./templates/rc');
+const seederTemplate = require('./templates/seeder');
+
+// TODO:
+// split out code into template files
+// add a teardown command
+// actually seed the database
 
 require('yargs')
 .command(
@@ -9,6 +20,10 @@ require('yargs')
   'setup seeder structure',
   () => {
       const databasePath = fs.existsSync('./database');
+
+      if(!fs.existsSync(path.resolve(__dirname, './\.geminirc'))) {
+          fs.writeFileSync('./.geminirc', rcTemplate)
+      }
 
       if(!databasePath) {
           fs.mkdirSync('database');
@@ -20,21 +35,25 @@ require('yargs')
           fs.mkdirSync('./database/seeder');
       }
 
-      fs.writeFileSync('./database/seeder/sample.js',
-      `
-      import fs from 'fs';
+      fs.writeFileSync('./database/seeder/example.js', seederTemplate);
 
-      console.log('hello world this is babel-node saying yo g');
-      `);
-
-      console.log('complete...');
+      console.log('setup complete...');
   }
 )
 .command(
   'seed',
   'seed some fancy data',
   () => {
-      const stuff = require('./database/seeder/sample.js');
+      const config = JSON.parse(fs.readFileSync('./.geminirc', { encoding: 'utf8' }));
+
+      mongoose.connect(config.uri);
+
+      mongoose.connection.on('connected', () => {
+          console.log('we are connected son!');
+          process.exit();
+      });
+
+
   }
 )
 .argv
