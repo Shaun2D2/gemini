@@ -1,7 +1,6 @@
 export default {
     async up() {
-        return setTimeout(() => Promise.resolve(), 1500);
-        // return Promise.resolve();
+        return Promise.resolve();
     },
     async down() {
 

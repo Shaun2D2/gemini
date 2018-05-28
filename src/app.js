@@ -1,4 +1,6 @@
+const _cliProgress = require('cli-progress');
 const mongoose = require('mongoose');
+const casual = require('casual');
 const path = require('path');
 const fs = require('fs');
 
@@ -44,16 +46,30 @@ require('yargs')
   'seed',
   'seed some fancy data',
   () => {
+      const progress = new _cliProgress.Bar({}, _cliProgress.Presets.shades_classic);
+      const seederPath = 'database/seeder';
       const config = JSON.parse(fs.readFileSync('./.geminirc', { encoding: 'utf8' }));
 
       mongoose.connect(config.uri);
 
-      mongoose.connection.on('connected', () => {
-          console.log('we are connected son!');
+      mongoose.connection.on('connected', async () => {
+          const files = fs.readdirSync(`./${seederPath}`, { encoding: 'utf8' });
+
+          progress.start(files.length, 0)
+
+          for(const [index, file] of files.entries()) {
+
+              const seeder = require(path.join(process.cwd(), `${seederPath}/${file}`));
+
+              await seeder.default.up(casual);
+
+              progress.update(index + 1);
+          }
+
+          progress.stop();
+
           process.exit();
       });
-
-
   }
 )
 .argv
