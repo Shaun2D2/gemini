@@ -1,5 +1,5 @@
 const _cliProgress = require('cli-progress');
-const mongoose = require('mongoose');
+const db = require('./scripts/database');
 const casual = require('casual');
 const path = require('path');
 const fs = require('fs');
@@ -13,8 +13,6 @@ const seederTemplate = require('./templates/seeder');
 
 // TODO:
 // split out code into template files
-// add a teardown command
-// actually seed the database
 
 require('yargs')
 .command(
@@ -46,17 +44,42 @@ require('yargs')
   'seed',
   'seed some fancy data',
   () => {
-      const progress = new _cliProgress.Bar({}, _cliProgress.Presets.shades_classic);
-      const seederPath = 'database/seeder';
+      /**
+       * lets read in the config file for settings
+       *
+       */
       const config = JSON.parse(fs.readFileSync('./.geminirc', { encoding: 'utf8' }));
 
-      mongoose.connect(config.uri);
+      db.connect(config).then( async () => {
 
-      mongoose.connection.on('connected', async () => {
-          const files = fs.readdirSync(`./${seederPath}`, { encoding: 'utf8' });
+          /**
+           * setup progress bar
+           *
+           */
+          const progress = new _cliProgress.Bar({}, _cliProgress.Presets.shades_classic);
 
-          progress.start(files.length, 0)
+          /**
+           * determine seeder path based on default or config file
+           *
+           */
+          const seederPath = config.path.length > 0 ? config.path : 'database/seeder';
 
+          /**
+           * get all the files we are going to work with
+           *
+           */
+          const files = config.order.length > 0 ? config.order : fs.readdirSync(`./${seederPath}`, { encoding: 'utf8' });
+
+          /**
+           * setup progress bar length
+           *
+           */
+          progress.start(files.length, 0);
+
+          /**
+           * loop through and seed the things while you update the progress bar like a champ
+           *
+           */
           for(const [index, file] of files.entries()) {
 
               const seeder = require(path.join(process.cwd(), `${seederPath}/${file}`));
@@ -66,10 +89,24 @@ require('yargs')
               progress.update(index + 1);
           }
 
+          /**
+           * stop the progress bar
+           *
+           */
           progress.stop();
+
+          /**
+           * exit the process
+           *
+           */
+          process.exit();
+      })
+      .catch((e) => {
+          console.log(e);
 
           process.exit();
       });
+
   }
 )
 .argv
