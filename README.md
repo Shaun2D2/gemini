@@ -11,6 +11,10 @@ To get started with Gemini, you simply need to install the package globally `npm
 
 Once the install is complete, run `gemini init` to setup all the nessesary files to configure Gemini
 
+## Contribute
+
+Why i'm glad you asked, sure!  It would be super bad ass if you can shape this package to be even better!  Be a champ and submit a PR!
+
 ... more to come in this readme!
 
 ###### made with :heart: by Shaun

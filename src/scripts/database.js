@@ -9,7 +9,7 @@ const connect = (config) => {
      * in the config file.
      *
      */
-    mongoose.connect(config.uri, { useMongoClient: true });
+    mongoose.connect(config.uri, { useNewUrlParser: true });
 
     return new Promise((res, rej) => {
         return mongoose.connection.on('connected', () => {

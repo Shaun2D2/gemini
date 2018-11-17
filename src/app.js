@@ -6,7 +6,6 @@ const fs = require('fs');
 
 /**
  * load in the code templates
- *
  */
 const rcTemplate = require('./templates/rc');
 const seederTemplate = require('./templates/seeder');
@@ -51,10 +50,8 @@ require('yargs')
       const config = JSON.parse(fs.readFileSync('./.geminirc', { encoding: 'utf8' }));
 
       db.connect(config).then( async () => {
-
           /**
            * setup progress bar
-           *
            */
           const progress = new _cliProgress.Bar({}, _cliProgress.Presets.shades_classic);
 
@@ -62,7 +59,7 @@ require('yargs')
            * determine seeder path based on default or config file
            *
            */
-          const seederPath = config.path.length > 0 ? config.path : 'database/seeder';
+          const seederPath = config.path || 'database/seeder';
 
           /**
            * get all the files we are going to work with
@@ -84,7 +81,7 @@ require('yargs')
 
               const seeder = require(path.join(process.cwd(), `${seederPath}/${file}`));
 
-              await seeder.default.up(casual);
+              await seeder.up(casual);
 
               progress.update(index + 1);
           }
